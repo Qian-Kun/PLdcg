@@ -1,0 +1,14 @@
+PF00756	CE1	ET	Esterase
+PF10503	CE1	EPD	Esterase PHB depolymerase
+PF05448	CE1 or CE7	AXE	Acetyl xylan esterase
+PF00657	CE2 or CE3 or CE12	GLA	GDSL-like Lipase/Acylhydrolase
+PF13472	CE2 or CE3 or CE12	GLA	GDSL-like Lipase/Acylhydrolase
+PF14606	CE2 or CE3 or CE12	GLA	GDSL-like Lipase/Acylhydrolase
+PF01522	CE4	PD	Polysaccharide deacetylase
+PF04748	CE4	PD	Polysaccharide deacetylase
+PF01083	CE5	CT	Cutinase
+PF03629	CE6	SASA	Carbohydrate esterase, sialic acid-specific acetylesterase
+PF01095	CE8	PT	Pectinesterase
+PF03331	CE11	UND	UDP-3-O-acyl N-acetylglycosamine deacetylase
+PF03283	CE13	PAE	Pectinacetylesterase
+PF02585	CE14	GD	GlcNAc-PI de-N-acetylase
