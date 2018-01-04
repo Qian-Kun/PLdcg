@@ -1,29 +1,35 @@
-## Protocol
-1. Performed Pfam domain annotations for whole-genome gene sets.
-(1) Downloaded HMMER version hmmer-3.1b1 from http://hmmer.org/.
-(2) Downloaded Pfam database from ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam27.0/Pfam-A.hmm.gz.
-(3) Analyzed using 10 threads.
+# Protocol
+
+## 1. Performed Pfam domain annotations for whole-genome gene sets.
+*	Downloaded HMMER version [hmmer-3.1b1](http://eddylab.org/software/hmmer3/3.1b1/hmmer-3.1b1.tar.gz).
+*	Downloaded Pfam database from [Pfam-A.hmm.gz](ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam27.0/Pfam-A.hmm.gz).
+
+```
 hmmsearch --domtblout Pin_domain.tab --cpu 10 Pfam-A.hmm PLdcg/sample_data/pep/P.infestans_gene_aa.fa > P.infestans_gene_aa.Pfam.out
 perl PLdcg/util/Pfam_annotation_step1.pl Pin_domain.tab P.infestans_gene_aa.Pfam.out P.infestans_gene_aa.Pfam.out.step1
 perl PLdcg/util/Pfam_annotation_step2.pl P.infestans_gene_aa.Pfam.out.step1 P.infestans_gene_aa.Pfam.out.step2
 perl PLdcg/util/Pfam_annotation_step3.pl P.infestans_gene_aa.Pfam.out.step2 P.infestans_gene_aa.Pfam.out.step3
 perl PLdcg/util/Pfam_annotation_step4.pl PLdcg/sample_data/CE_domain_infor.txt P.infestans_gene_aa.Pfam.out.step3 P.infestans_gene_aa.Pfam.out.result
+```
 
-2. Phylogenetic analysis to identify CE2, CE3, and CE12.
-(1) Several identified gene domains from CE2, CE3, and CE12, which were obtained from CAZy database (http://www.cazy.org/).
-(2) Download TreeBest version 1.9.2 from TreeSoft: TreeBeST (http://treesoft.sourceforge.net/treebest.shtml).
-(3) Performing sequence alignment using MUSCLE version 3.8.31 and building Neighbour-joining tree using TreeBest.
+## 2. Phylogenetic analysis to identify CE2, CE3, and CE12.
+*	Several identified gene domains from CE2, CE3, and CE12, which were obtained from [CAZy database](http://www.cazy.org/).
+*	Download TreeBest version 1.9.2 from TreeSoft: [TreeBeST](http://treesoft.sourceforge.net/treebest.shtml).
+*	Performing sequence alignment using [MUSCLE version 3.8.31](http://www.drive5.com/muscle/downloads3.8.31/muscle3.8.31_i86linux64.tar.gz) and building Neighbour-joining tree using TreeBest.
+
+```
 perl PLdcg/util/get_domain_sequences.pl PLdcg/sample_data/GDSL_domain.ID Pin_domain.tab P.infestans_gene_aa.fa > GDSL_for_NJ.fa
 cat PLdcg/sample_data/GDSL_domain.fa >> GDSL_for_NJ.fa
 muscle -in GDSL_for_NJ.fa -out GDSL_for_NJ.fa.muscle
-#treebest nj -b 1000 -t jtt GDSL_for_NJ.fa.muscle > GDSL_for_NJ.fa.muscle.nhx
 treebest nj -b 1000 GDSL_for_NJ.fa.muscle > GDSL_for_NJ.fa.muscle.nhx
-From the phylogenetic file 'GDSL_for_NJ.fa.muscle.nhx' that is viewed by forester.jar, sub-families were identified to be clustered together.
+```
 
-3. Detect orthologous groups and obtain groups.txt file.
-(1) Set up Orthomcl and MySQL server.
+*	From the phylogenetic file 'GDSL_for_NJ.fa.muscle.nhx' that is viewed by [forester.jar](https://github.com/cmzmasek/forester/blob/master/forester/java/forester.jar?raw=true), sub-families were identified to be clustered together.
 
-(2) Running:
+## 3. Detect orthologous groups and obtain 'groups.txt' file.
+*	first set up Orthomcl and MySQL server.
+
+```
 orthomclInstallSchema orthomcl.config install_schema.log
 mkdir sequences
 cd sequences
@@ -53,7 +59,7 @@ orthomclPairs orthomcl.config pairs.log cleanup=yes
 orthomclDumpPairsFiles orthomcl.config
 mcl mclInput --abc -I 1.5 -o mclOutput
 orthomclMclToGroups PIGROUP 1000 < mclOutput > groups.txt
-
-(3) orthologous groups of CE genes.
 perl PLdcg/util/orthologous_group_for_special_genes.pl CE_annotation_file.list groups.txt annotated_group.txt
-Remove groups containing proteases that are predicted by MEROPS.
+```
+
+## 4. Manually remove groups containing proteases that are predicted by MEROPS.
